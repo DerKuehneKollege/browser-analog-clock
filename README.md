@@ -1,6 +1,8 @@
 # browser-analog-clock
 
-An analog clock in the browser.
+An SVG-rendered analog clock in the browser.
+
+![img.png](docs/screenshot.png)
 
 ## How to run
 
