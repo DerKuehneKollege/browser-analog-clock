@@ -7,6 +7,7 @@
 }
 
 body {
+    font-family: sans-serif;
     background: white;
 }
 
@@ -21,5 +22,18 @@ body {
     left: 0;
     right: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+.svg-wrapper {
     margin: 1rem;
+    flex-grow: 1;
+}
+
+.menu {
+    border: 1px solid gray;
+    width: 250px;
+    padding: 0.5rem;
+    background: #d1cfff;
 }

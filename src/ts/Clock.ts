@@ -44,6 +44,8 @@ export class Clock {
     private readonly roundedMarker: Marker;
     private readonly arrowMarker: Marker;
 
+    private readonly hourTexts: Text[] = [];
+
     private hourHandleElem?: Path;
     private minuteHandleElem?: Path;
     private secondHandleElem?: Path;
@@ -63,8 +65,35 @@ export class Clock {
 
         this.renderStatic();
 
-        this.update();
-        setInterval(() => this.update(), Clock.UPDATE_RATE_MS);
+        this.render();
+        this.startRenderLoop();
+        // setInterval(() => this.render(), Clock.UPDATE_RATE_MS);
+    }
+
+    public setHourTextsVisible(visible: boolean): void {
+        if (visible) {
+            this.hourTexts.forEach(value => value.show());
+        } else {
+            this.hourTexts.forEach(value => value.hide());
+        }
+    }
+
+    public setClockDisplayVisible(visible: boolean): void {
+        if (visible) {
+            this.clockDisplayText?.show();
+        } else {
+            this.clockDisplayText?.hide();
+        }
+    }
+
+    public setSecondHandVisible(visible: boolean): void {
+        if (visible) {
+            this.secondHandCircle?.show();
+            this.secondHandleElem?.show();
+        } else {
+            this.secondHandCircle?.hide();
+            this.secondHandleElem?.hide();
+        }
     }
 
     private renderStatic() {
@@ -108,10 +137,12 @@ export class Clock {
             // there is no 0, only 12 o'clock
             const hourText = (i == 0 ? 12 : i).toString();
 
-            this.svg
-                .text(hourText)
-                // .font('family', 'JetBrains Mono')
+            const text = this.svg.text(hourText);
+
+            text.font('family', 'sans-serif')
                 .center(hourTextX, hourTextY);
+
+            this.hourTexts.push(text);
         }
 
         this.svg
@@ -122,7 +153,15 @@ export class Clock {
             .center(Clock.RADIUS, Clock.RADIUS);
     }
 
-    private update() {
+    private startRenderLoop() {
+        window.requestAnimationFrame(time => {
+            this.render();
+            this.startRenderLoop();
+        });
+    }
+
+    private render() {
+        // const now = new Date(2022, 10, 9, 0, 0, 0);
         const now = new Date();
         const hours = now.getHours();
         const minutes = now.getMinutes();
@@ -151,7 +190,7 @@ export class Clock {
         if (!this.clockDisplayText) {
             this.clockDisplayText = this.svg.text('12:34:56')
                 .fill('gray')
-                .font('family', 'JetBrains Mono')
+                .font('family', 'sans-serif')
                 .center(Clock.RADIUS, Clock.RADIUS + 20);
         }
 
